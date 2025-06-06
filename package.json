@@ -1,0 +1,14 @@
+{
+  "name": "simple-web-scraper",
+  "version": "1.0.0",
+  "description": "A simple web scraper that extracts page elements",
+  "main": "scraper.js",
+  "type": "module",
+  "scripts": {
+    "start": "node scraper.js"
+  },
+  "dependencies": {
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12"
+  }
+}
