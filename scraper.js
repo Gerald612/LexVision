@@ -16,6 +16,11 @@ const sanitizeUrl = (url) => {
   return url.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 100);
 };
 
+// Mock AI enhancement function
+function ai_enhance(text) {
+  return "Enhanced " + text;
+}
+
 // Main scraper function
 async function scrape(url) {
   try {
@@ -33,9 +38,13 @@ async function scrape(url) {
     const $ = cheerio.load(html);
     
     // Extract data
+    const title = $('title').text().trim();
+    
+    // Extract and enhance data
     const data = {
       url: url,
-      title: $('title').text().trim(),
+      title: title,
+      enhanced_title: ai_enhance(title),
       headings: {
         h1: [],
         h2: [],
@@ -44,7 +53,16 @@ async function scrape(url) {
         h5: [],
         h6: []
       },
+      enhanced_headings: {
+        h1: [],
+        h2: [],
+        h3: [],
+        h4: [],
+        h5: [],
+        h6: []
+      },
       paragraphs: [],
+      enhanced_paragraphs: [],
       images: []
     };
     
@@ -54,6 +72,7 @@ async function scrape(url) {
         const text = $(element).text().trim();
         if (text) {
           data.headings[`h${i}`].push(text);
+          data.enhanced_headings[`h${i}`].push(ai_enhance(text));
         }
       });
     }
@@ -63,6 +82,7 @@ async function scrape(url) {
       const text = $(element).text().trim();
       if (text) {
         data.paragraphs.push(text);
+        data.enhanced_paragraphs.push(ai_enhance(text));
       }
     });
     
@@ -90,8 +110,11 @@ async function scrape(url) {
     console.log(`Scraping complete! Data saved to ${filename}`);
     console.log(`Found:`);
     console.log(`- Title: ${data.title}`);
+    console.log(`- Enhanced Title: ${data.enhanced_title}`);
     console.log(`- Headings: ${Object.values(data.headings).flat().length}`);
+    console.log(`- Enhanced Headings: ${Object.values(data.enhanced_headings).flat().length}`);
     console.log(`- Paragraphs: ${data.paragraphs.length}`);
+    console.log(`- Enhanced Paragraphs: ${data.enhanced_paragraphs.length}`);
     console.log(`- Images: ${data.images.length}`);
     
     return data;
